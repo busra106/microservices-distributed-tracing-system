@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--
+      Log format includes traceId/spanId from Sleuth MDC (X-B3-TraceId / X-B3-SpanId),
+      and ships JSON logs to Logstash over TCP so Kibana can query them.
+    -->
+
+    <!-- Read from environment variables injected by docker-compose -->
+    <property name="APP_NAME" value="${APP_NAME:-user-service}"/>
+    <property name="LOGSTASH_HOST" value="${LOGSTASH_HOST:-logstash}"/>
+    <property name="LOGSTASH_PORT" value="${LOGSTASH_PORT:-5000}"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg traceId=%X{X-B3-TraceId} spanId=%X{X-B3-SpanId}%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"${APP_NAME}"}</customFields>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOGSTASH"/>
+    </root>
+</configuration>
+

@@ -1,0 +1,21 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+spring:
+  application:
+    name: user-service
+  zipkin:
+    base-url: ${ZIPKIN_BASE_URL:http://localhost:9411}
+  sleuth:
+    sampler:
+      probability: 1.0 # sample everything to make traces easy to see
+
+logging:
+  level:
+    root: INFO
+
+# Logstash destination is consumed by logback-spring.xml.
+logstash:
+  host: ${LOGSTASH_HOST:localhost}
+  port: ${LOGSTASH_PORT:5000}
+

@@ -1,0 +1,20 @@
+server:
+  port: ${SERVER_PORT:8083}
+
+spring:
+  application:
+    name: payment-service
+  zipkin:
+    base-url: ${ZIPKIN_BASE_URL:http://localhost:9411}
+  sleuth:
+    sampler:
+      probability: 1.0
+
+logging:
+  level:
+    root: INFO
+
+logstash:
+  host: ${LOGSTASH_HOST:localhost}
+  port: ${LOGSTASH_PORT:5000}
+
